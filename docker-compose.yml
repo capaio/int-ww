@@ -1,0 +1,24 @@
+version: "3.4"
+
+services:
+
+  node:
+    build:
+      context: ./.docker/node
+      dockerfile: ./development/Dockerfile
+    volumes:
+      - ./:/usr/src/kmon-api
+    depends_on:
+      - mysql
+
+  mysql:
+    build:
+      context: .
+      dockerfile: .docker/mysql/Dockerfile
+    command: --sql_mode="ALLOW_INVALID_DATES,NO_ENGINE_SUBSTITUTION" --max_allowed_packet=32505856 --log-output=FILE --general-log=ON --general-log-file=/var/log/mysql/general.log
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "44039:3306"
+    tmpfs: /var/lib/mysql
+

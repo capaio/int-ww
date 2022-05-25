@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+
+  node:
+    networks:
+      app_net:
+        ipv4_address: 172.37.0.3
+    ports:
+      - "8088:8080"
+      - "9299:9229"
+    command: sh -c "yarn run start:debug"
+
+  mysql:
+    networks:
+      app_net:
+        ipv4_address: 172.37.0.2
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.37.0.0/24
