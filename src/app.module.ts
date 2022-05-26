@@ -4,7 +4,9 @@ import { AppService } from './app.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import {ThrottlerGuard, ThrottlerModule} from "@nestjs/throttler";
-import {APP_GUARD} from "@nestjs/core";
+import {APP_GUARD} from "@nestjs/core" ;
+import {UserModule} from "./user/user.module";
+import { AsdsModule } from './asds/asds.module';
 
 @Module({
   imports: [
@@ -26,7 +28,8 @@ import {APP_GUARD} from "@nestjs/core";
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 10
-    })
+    }),
+    UserModule
   ],
   controllers: [AppController],
   providers: [
