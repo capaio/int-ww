@@ -1,4 +1,5 @@
-const crypto = require('crypto')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const crypto = require("crypto");
 
 export function getRandomInt(min: number, max: number): number {
   min = Math.ceil(min);
@@ -7,5 +8,5 @@ export function getRandomInt(min: number, max: number): number {
 }
 
 export function encrypt(word: string) {
-  return crypto.createHash('md5').update(word).digest("hex")
+  return crypto.createHash("md5").update(word).digest("hex");
 }

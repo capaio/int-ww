@@ -1,6 +1,6 @@
-import {IsInt, Max, Min} from 'class-validator';
-import {Type} from "class-transformer";
-import {HARD_MAX, SOFT_MAX} from "../../common/constants";
+import { IsInt, Max, Min } from "class-validator";
+import { Type } from "class-transformer";
+import { HARD_MAX, SOFT_MAX } from "../../common/constants";
 
 export class AddCurrencyDto {
   @IsInt()

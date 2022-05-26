@@ -1,7 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-
-@Entity({ name: 'wallets' })
+@Entity({ name: "wallets" })
 export class WalletEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -11,6 +10,4 @@ export class WalletEntity {
 
   @Column("int")
   soft_currency: number;
-
-
 }

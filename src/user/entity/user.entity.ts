@@ -1,8 +1,13 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {WalletEntity} from "./wallet.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { WalletEntity } from "./wallet.entity";
 
-
-@Entity({ name: 'users' })
+@Entity({ name: "users" })
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,7 +20,7 @@ export class UserEntity {
 
   @OneToOne(() => WalletEntity)
   @JoinColumn({
-    name: 'wallet_id'
+    name: "wallet_id",
   })
-  wallet: WalletEntity
+  wallet: WalletEntity;
 }
