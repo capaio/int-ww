@@ -16,13 +16,13 @@ export class UserEntity {
   @Column({ length: 255 })
   username: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, select: false })
   pwd: string;
 
-  @Column()
+  @Column({ length: 255, select: false })
   session_id: string;
 
-  @Column({ type: "timestamp" })
+  @Column({ type: "timestamp", select: false })
   session_expiration: Date;
 
   @OneToOne(() => WalletEntity)

@@ -16,12 +16,23 @@ export class ClubService {
     club.manager = user;
     club.club_name = clubName;
 
-    const res = await this.clubRepository.save(club);
-
-    return res;
+    return this.clubRepository.save(club);
   }
 
   async getAll() {
     return this.clubRepository.find();
+  }
+
+  async getAllWithManager() {
+    return this.clubRepository.find({
+      relations: ["manager"],
+    });
+  }
+
+  async get(id) {
+    return this.clubRepository.findOne({
+      where: { id: id },
+      relations: ["manager"],
+    });
   }
 }

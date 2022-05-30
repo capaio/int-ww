@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -17,8 +18,13 @@ export class ClubController {
   ) {}
 
   @Get("")
-  findOne() {
-    return this.clubService.getAll();
+  findAll() {
+    return this.clubService.getAllWithManager();
+  }
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.clubService.get(id);
   }
 
   @Post("")
