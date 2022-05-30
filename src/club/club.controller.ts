@@ -41,9 +41,10 @@ export class ClubController {
     }
 
     const club = await this.clubService.create(user, createClubData.name);
-
     user.payCreateFeeClub();
-    await this.userService.updateWallet(user.wallet);
+    user.clubs.push(club);
+
+    await this.userService.updateUser(user);
 
     return { clubId: club.id };
   }

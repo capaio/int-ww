@@ -71,14 +71,14 @@ export class UserService {
   async isLoggedIn(uuid: string): Promise<UserEntity> {
     return this.userRepository.findOne({
       where: { session_id: uuid, session_expiration: MoreThan(new Date()) },
-      relations: ["wallet"],
+      relations: ["wallet", "clubs"],
     });
   }
 
   async findOne(id: number) {
     return this.userRepository.findOne({
       where: { id: id },
-      relations: ["wallet"],
+      relations: ["wallet", "clubs"],
     });
   }
 

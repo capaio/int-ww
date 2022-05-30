@@ -2,11 +2,14 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { WalletEntity } from "./wallet.entity";
 import { CREATE_CLUB_FEE, JOIN_CLUB_FEE } from "../../common/constants";
+import { ClubEntity } from "../../club/club.entity";
 
 @Entity({ name: "users" })
 export class UserEntity {
@@ -25,11 +28,23 @@ export class UserEntity {
   @Column({ type: "timestamp", select: false })
   session_expiration: Date;
 
-  @OneToOne(() => WalletEntity)
+  @OneToOne(() => WalletEntity, {
+    cascade: true,
+  })
   @JoinColumn({
     name: "wallet_id",
   })
   wallet: WalletEntity;
+
+  @ManyToMany(() => ClubEntity, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: "club_members",
+    joinColumns: [{ name: "user_id" }],
+    inverseJoinColumns: [{ name: "club_id" }],
+  })
+  clubs: ClubEntity[];
 
   canCreateClub(): boolean {
     return this.wallet.soft_currency >= CREATE_CLUB_FEE;
