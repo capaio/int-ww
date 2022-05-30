@@ -5,7 +5,8 @@ import {
   HttpCode,
   Param,
   Patch,
-  Post, UnauthorizedException,
+  Post,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
@@ -20,14 +21,13 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Post('login')
+  @Post("login")
   async loginUser(@Body() userDto: UserDto) {
     const uuid = await this.userService.login(userDto);
 
-    if(uuid===null) throw new UnauthorizedException('Username or password are wrong')
-    else return {uuid: uuid}
-
-
+    if (uuid === null)
+      throw new UnauthorizedException("Username or password are wrong");
+    else return { uuid: uuid };
   }
 
   @Get(":id")

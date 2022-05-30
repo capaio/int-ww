@@ -21,7 +21,7 @@ export class UserEntity {
   @Column()
   session_id: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: "timestamp" })
   session_expiration: Date;
 
   @OneToOne(() => WalletEntity)

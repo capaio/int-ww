@@ -46,20 +46,19 @@ export class UserService {
 
   async login(userData: UserDto): Promise<string | null> {
     const user = await this.checkUser(userData);
-    if(!user) return null;
+    if (!user) return null;
 
     user.session_id = crypto.randomUUID();
-    const expiration = new Date()
-    console.log(expiration)
-    expiration.setTime(expiration.getTime() + (60 * 60 * 1000));
+    const expiration = new Date();
+    console.log(expiration);
+    expiration.setTime(expiration.getTime() + 60 * 60 * 1000);
     user.session_expiration = expiration;
 
-    console.log(expiration)
+    console.log(expiration);
 
     await this.userRepository.save(user);
 
-    return user.session_id
-
+    return user.session_id;
   }
 
   async checkUser(userData: UserDto) {
