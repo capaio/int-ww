@@ -54,9 +54,15 @@ export class UserEntity {
     return this.wallet.soft_currency >= JOIN_CLUB_FEE;
   }
 
-  payCreateFeeClub() {
+  payCreateClubFee() {
     if (this.canCreateClub()) {
       this.wallet.soft_currency -= CREATE_CLUB_FEE;
+    }
+  }
+
+  payJoinClubFee() {
+    if (this.canJoinClub()) {
+      this.wallet.soft_currency -= JOIN_CLUB_FEE;
     }
   }
 }

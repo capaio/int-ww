@@ -2,10 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { UserEntity } from "../user/entity/user.entity";
+import { MAX_USERS_CLUB } from "../common/constants";
 
 @Entity({ name: "clubs" })
 export class ClubEntity {
@@ -20,4 +23,18 @@ export class ClubEntity {
 
   @Column({ length: 255 })
   club_name: string;
+
+  @ManyToMany(() => UserEntity, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: "club_members",
+    inverseJoinColumns: [{ name: "user_id" }],
+    joinColumns: [{ name: "club_id" }],
+  })
+  users: UserEntity[];
+
+  isFull() {
+    return this.users.length >= MAX_USERS_CLUB;
+  }
 }

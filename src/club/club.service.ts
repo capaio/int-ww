@@ -32,7 +32,13 @@ export class ClubService {
   async get(id) {
     return this.clubRepository.findOne({
       where: { id: id },
-      relations: ["manager"],
+      relations: ["manager", "users"],
+    });
+  }
+
+  async getClub(id) {
+    return this.clubRepository.findOne({
+      where: { id: id },
     });
   }
 }
