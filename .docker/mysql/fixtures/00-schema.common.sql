@@ -30,4 +30,19 @@ CREATE TABLE IF NOT EXISTS users (
 )  ENGINE=INNODB;
 
 
+CREATE TABLE IF NOT EXISTS clubs (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     manager_id INT NOT NULL,
+     club_name VARCHAR(255) NOT NULL,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (manager_id) REFERENCES users(id)
+)  ENGINE=INNODB;
 
+
+CREATE TABLE IF NOT EXISTS club_members (
+     club_id INT NOT NULL,
+     user_id INT NOT NULL,
+     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (user_id) REFERENCES users(id),
+     FOREIGN KEY (club_id) REFERENCES clubs(id)
+)  ENGINE=INNODB;

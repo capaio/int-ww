@@ -35,6 +35,11 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @Get("isloggedin/:id")
+  isL(@Param("id") id: string) {
+    return this.userService.isLoggedIn(id);
+  }
+
   @Patch(":id/addCurrency")
   @HttpCode(204)
   async update(@Param("id") id: string, @Body() updateUserDto: AddCurrencyDto) {

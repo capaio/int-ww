@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entity/user.entity";
-import { Repository } from "typeorm";
+import { MoreThan, Repository } from "typeorm";
 import { UserDto } from "./dto/user.dto";
 import { WalletEntity } from "./entity/wallet.entity";
 import { encrypt, getRandomInt } from "../helpers/helpers";
@@ -68,6 +68,13 @@ export class UserService {
     });
   }
 
+  async isLoggedIn(uuid: string): Promise<UserEntity> {
+    return this.userRepository.findOne({
+      where: { session_id: uuid, session_expiration: MoreThan(new Date()) },
+      relations: ["wallet"],
+    });
+  }
+
   async findOne(id: number) {
     return this.userRepository.findOne({
       where: { id: id },
@@ -98,5 +105,13 @@ export class UserService {
         : +user.wallet.hard_currency + +updateUserDto.hard_currency;
 
     await this.walletRepository.save(user.wallet);
+  }
+
+  async updateUser(user: UserEntity) {
+    await this.userRepository.save(user);
+  }
+
+  async updateWallet(wallet: WalletEntity) {
+    await this.walletRepository.save(wallet);
   }
 }
