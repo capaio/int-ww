@@ -4,12 +4,14 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { WalletEntity } from "./wallet.entity";
 import { CREATE_CLUB_FEE, JOIN_CLUB_FEE } from "../../common/constants";
 import { ClubEntity } from "../../club/club.entity";
+import { DonationRequestEntity } from "../../donation/donation.entity";
 
 @Entity({ name: "users" })
 export class UserEntity {
@@ -45,6 +47,11 @@ export class UserEntity {
     inverseJoinColumns: [{ name: "club_id" }],
   })
   clubs: ClubEntity[];
+
+  @OneToMany(() => DonationRequestEntity, (donation) => donation.user, {
+    cascade: true,
+  })
+  donationRequests: DonationRequestEntity[];
 
   canCreateClub(): boolean {
     return this.wallet.soft_currency >= CREATE_CLUB_FEE;

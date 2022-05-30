@@ -9,12 +9,15 @@ import {
 import { ClubService } from "./club.service";
 import { CreateClubDto } from "./dto/createClub.dto";
 import { UserService } from "../user/user.service";
+import { DonationRequestDto } from "../donation/dto/donationRequest.dto";
+import { DonationService } from "../donation/donation.service";
 
 @Controller("club")
 export class ClubController {
   constructor(
     private readonly clubService: ClubService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly donationService: DonationService
   ) {}
 
   @Get("")
@@ -52,6 +55,28 @@ export class ClubController {
     await this.userService.updateUser(user);
 
     return { clubId: club.id };
+  }
+
+  @Post(":id/donationRequest")
+  async donationRequest(
+    @Param("id") id: number,
+    @Body() donationRequestDto: DonationRequestDto
+  ) {
+    const user = await this.userService.isLoggedInAndCheckClub(
+      donationRequestDto.uuid,
+      id
+    );
+    if (!user) {
+      throw new UnauthorizedException("Unlogged or not belonging to club");
+    }
+
+    const res = await this.donationService.createRequest(
+      user,
+      user.clubs[0],
+      donationRequestDto.amount
+    );
+
+    return { id: res.id };
   }
 
   @Post("/join/:id")

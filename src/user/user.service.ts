@@ -75,10 +75,30 @@ export class UserService {
     });
   }
 
+  async isLoggedInAndCheckClub(uuid: string, id: number): Promise<UserEntity> {
+    return this.userRepository.findOne({
+      where: {
+        session_id: uuid,
+        session_expiration: MoreThan(new Date()),
+        clubs: {
+          id: id,
+        },
+      },
+      relations: ["wallet", "clubs"],
+    });
+  }
+
   async findOne(id: number) {
     return this.userRepository.findOne({
       where: { id: id },
       relations: ["wallet", "clubs"],
+    });
+  }
+
+  async findOneWithRequests(id: number, request_id: number) {
+    return this.userRepository.findOne({
+      where: { id: id, donationRequests: { id: request_id } },
+      relations: ["wallet", "clubs", "donationRequests"],
     });
   }
 

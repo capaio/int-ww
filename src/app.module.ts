@@ -8,6 +8,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { UserModule } from "./user/user.module";
 import { ClubModule } from "./club/club.module";
 import { MessageModule } from "./message/message.module";
+import { DonationModule } from "./donation/donation.module";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { MessageModule } from "./message/message.module";
     UserModule,
     ClubModule,
     MessageModule,
+    DonationModule,
   ],
   controllers: [AppController],
   providers: [
