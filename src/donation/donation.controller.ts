@@ -43,7 +43,7 @@ export class DonationController {
         donationRequest.user.id,
         donationRequest.id
       );
-      console.log(recipient);
+
       recipient.wallet.soft_currency += donationRequest.funded;
       recipient.donationRequests[0].funded = 0;
       await this.userService.updateUser(recipient);

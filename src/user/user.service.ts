@@ -50,11 +50,9 @@ export class UserService {
 
     user.session_id = crypto.randomUUID();
     const expiration = new Date();
-    console.log(expiration);
+
     expiration.setTime(expiration.getTime() + 60 * 60 * 1000);
     user.session_expiration = expiration;
-
-    console.log(expiration);
 
     await this.userRepository.save(user);
 
