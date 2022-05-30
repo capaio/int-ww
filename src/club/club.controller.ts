@@ -27,6 +27,11 @@ export class ClubController {
     return this.clubService.get(id);
   }
 
+  @Get(":id/messages")
+  getMessages(@Param("id") id: string) {
+    return this.clubService.getMessages(id);
+  }
+
   @Post("")
   async create(@Body() createClubData: CreateClubDto) {
     const user = await this.userService.isLoggedIn(createClubData.uuid);

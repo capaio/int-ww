@@ -4,11 +4,13 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { UserEntity } from "../user/entity/user.entity";
 import { MAX_USERS_CLUB } from "../common/constants";
+import { MessageEntity } from "../message/message.entity";
 
 @Entity({ name: "clubs" })
 export class ClubEntity {
@@ -23,6 +25,9 @@ export class ClubEntity {
 
   @Column({ length: 255 })
   club_name: string;
+
+  @OneToMany(() => MessageEntity, (message) => message.club)
+  messages: MessageEntity[];
 
   @ManyToMany(() => UserEntity, {
     cascade: true,

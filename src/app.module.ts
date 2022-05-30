@@ -7,6 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
 import { UserModule } from "./user/user.module";
 import { ClubModule } from "./club/club.module";
+import { MessageModule } from "./message/message.module";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ClubModule } from "./club/club.module";
     }),
     UserModule,
     ClubModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [

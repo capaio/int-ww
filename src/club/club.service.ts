@@ -41,4 +41,11 @@ export class ClubService {
       where: { id: id },
     });
   }
+
+  async getMessages(id) {
+    return this.clubRepository.findOne({
+      where: { id: id },
+      relations: ["messages.user"],
+    });
+  }
 }
