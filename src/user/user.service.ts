@@ -6,10 +6,11 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entity/user.entity";
 import { Repository } from "typeorm";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { UserDto } from "./dto/user.dto";
 import { WalletEntity } from "./entity/wallet.entity";
 import { encrypt, getRandomInt } from "../helpers/helpers";
 import { AddCurrencyDto } from "./dto/addCurrency.dto";
+import * as crypto from "crypto";
 import { HARD_MAX, HARD_MIN, SOFT_MAX, SOFT_MIN } from "../common/constants";
 
 @Injectable()
@@ -21,7 +22,7 @@ export class UserService {
     private readonly walletRepository: Repository<WalletEntity>
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: UserDto) {
     const checkUser = await this.userRepository.findOneBy({
       username: createUserDto.username,
     });
@@ -43,9 +44,41 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
+  async login(userData: UserDto): Promise<string | null> {
+    const user = await this.checkUser(userData);
+    if(!user) return null;
+
+    user.session_id = crypto.randomUUID();
+    const expiration = new Date()
+    console.log(expiration)
+    expiration.setTime(expiration.getTime() + (60 * 60 * 1000));
+    user.session_expiration = expiration;
+
+    console.log(expiration)
+
+    await this.userRepository.save(user);
+
+    return user.session_id
+
+  }
+
+  async checkUser(userData: UserDto) {
+    return this.userRepository.findOne({
+      where: { username: userData.username, pwd: encrypt(userData.password) },
+      relations: ["wallet"],
+    });
+  }
+
   async findOne(id: number) {
     return this.userRepository.findOne({
       where: { id: id },
+      relations: ["wallet"],
+    });
+  }
+
+  async findByUsername(username: string) {
+    return this.userRepository.findOne({
+      where: { username: username },
       relations: ["wallet"],
     });
   }

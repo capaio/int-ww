@@ -18,6 +18,12 @@ export class UserEntity {
   @Column({ length: 255 })
   pwd: string;
 
+  @Column()
+  session_id: string;
+
+  @Column({ type: 'timestamp' })
+  session_expiration: Date;
+
   @OneToOne(() => WalletEntity)
   @JoinColumn({
     name: "wallet_id",

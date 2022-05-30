@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS users (
      username VARCHAR(255) NOT NULL UNIQUE,
      pwd VARCHAR(255) NOT NULL,
      wallet_id INT NOT NULL,
+     session_id VARCHAR(255),
+     session_expiration DATETIME,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      FOREIGN KEY (wallet_id) REFERENCES wallets(id)
 )  ENGINE=INNODB;
