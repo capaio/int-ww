@@ -25,9 +25,9 @@ export class UserController {
   async loginUser(@Body() userDto: UserDto) {
     const uuid = await this.userService.login(userDto);
 
-    if (uuid === null)
+    if (uuid === null) {
       throw new UnauthorizedException("Username or password are wrong");
-    else return { uuid: uuid };
+    } else return { uuid: uuid };
   }
 
   @Get(":id")
