@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS fund_requests (
     club_id INT NOT NULL,
     amount INT NOT NULL,
     funded INT NOT NULL DEFAULT 0,
+    fulfilled INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (club_id) REFERENCES clubs(id)

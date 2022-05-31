@@ -1,4 +1,4 @@
-import { IsNotEmpty, Max, Min } from "class-validator";
+import {IsInt, IsNotEmpty, Max, Min} from "class-validator";
 import { SOFT_MAX } from "../../common/constants";
 
 export class DonationRequestDto {
@@ -6,6 +6,7 @@ export class DonationRequestDto {
   uuid: string;
 
   @IsNotEmpty()
+  @IsInt()
   @Min(1)
   @Max(SOFT_MAX)
   amount: number;

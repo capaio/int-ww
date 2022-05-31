@@ -76,7 +76,6 @@ export class ClubController {
       donationRequestDto.amount
     );
 
-    return { id: res.id };
   }
 
   @Post("/join/:id")

@@ -31,6 +31,9 @@ export class DonationRequestEntity {
   @Column()
   funded: number;
 
+  @Column()
+  fulfilled: number;
+
   isFulfilled() {
     return this.funded >= this.amount;
   }

@@ -26,11 +26,11 @@ export class DonationService {
       where: {
         id: id,
       },
-      relations: ["user"],
+      relations: ["user", "club"],
     });
   }
 
   async update(request: DonationRequestEntity) {
-    await this.requestRepository.save(request);
+    await this.requestRepository.update({id: request.id}, request);
   }
 }

@@ -35,18 +35,6 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-  @Get(":id/:donationId")
-  findOneWithDonation(
-    @Param("id") id: string,
-    @Param("donationId") donationId: string
-  ) {
-    return this.userService.findOneWithRequests(+id, +donationId);
-  }
-
-  @Get("isloggedin/:id")
-  isL(@Param("id") id: string) {
-    return this.userService.isLoggedIn(id);
-  }
 
   @Patch(":id/addCurrency")
   @HttpCode(204)

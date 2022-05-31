@@ -28,6 +28,14 @@ export class DonationController {
     if (!donationRequest) {
       throw new BadRequestException("Donation request does not exists");
     }
+    if (donationRequest.fulfilled) {
+      throw new BadRequestException("Donations are closed");
+    }
+
+
+    if (!user.clubs.some((club) => club.id == donationRequest.club.id)) {
+      throw new UnauthorizedException(`Before donate you must join the club ${donationRequest.club.club_name}`);
+    }
 
     if (user.wallet.soft_currency < donationDto.amount) {
       throw new BadRequestException(`You don't have enough money`);
@@ -39,14 +47,16 @@ export class DonationController {
     await this.donationService.update(donationRequest);
 
     if (donationRequest.isFulfilled()) {
+
       const recipient = await this.userService.findOneWithRequests(
         donationRequest.user.id,
         donationRequest.id
       );
 
-      recipient.wallet.soft_currency += donationRequest.funded;
       recipient.donationRequests[0].funded = 0;
-      await this.userService.updateUser(recipient);
+      recipient.donationRequests[0].fulfilled = 1;
+      await this.userService.updateCurrency(recipient.id, {hard_currency:0, soft_currency: recipient.wallet.soft_currency + donationRequest.funded});
+      await this.donationService.update(recipient.donationRequests[0]);
     }
   }
 }

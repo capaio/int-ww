@@ -48,9 +48,7 @@ export class UserEntity {
   })
   clubs: ClubEntity[];
 
-  @OneToMany(() => DonationRequestEntity, (donation) => donation.user, {
-    cascade: true,
-  })
+  @OneToMany(() => DonationRequestEntity, (donation) => donation.user)
   donationRequests: DonationRequestEntity[];
 
   canCreateClub(): boolean {
