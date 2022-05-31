@@ -83,9 +83,13 @@ Expected Body:
 }
 ```
 
-Response ok:
+Response:
 ```
-204 No content
+{
+    "id": number,
+    "hard_currency": integer,
+    "soft_currency": integer
+}
 ```
 <hr>
 

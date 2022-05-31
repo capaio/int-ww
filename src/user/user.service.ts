@@ -122,7 +122,7 @@ export class UserService {
         ? +HARD_MAX
         : +user.wallet.hard_currency + +updateUserDto.hard_currency;
 
-    await this.walletRepository.save(user.wallet);
+    return this.walletRepository.save(user.wallet);
   }
 
   async updateUser(user: UserEntity) {

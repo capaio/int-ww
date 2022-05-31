@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   Param,
   Patch,
   Post,
@@ -36,8 +35,7 @@ export class UserController {
   }
 
   @Patch(":id/addCurrency")
-  @HttpCode(204)
   async update(@Param("id") id: string, @Body() updateUserDto: AddCurrencyDto) {
-    await this.userService.updateCurrency(+id, updateUserDto);
+    return this.userService.updateCurrency(+id, updateUserDto);
   }
 }
