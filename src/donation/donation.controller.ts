@@ -53,7 +53,6 @@ export class DonationController {
         donationRequest.id
       );
 
-      recipient.donationRequests[0].funded = 0;
       recipient.donationRequests[0].fulfilled = 1;
       await this.userService.updateCurrency(recipient.id, {
         hard_currency: 0,
