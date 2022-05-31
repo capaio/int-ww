@@ -35,7 +35,6 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-
   @Patch(":id/addCurrency")
   @HttpCode(204)
   async update(@Param("id") id: string, @Body() updateUserDto: AddCurrencyDto) {

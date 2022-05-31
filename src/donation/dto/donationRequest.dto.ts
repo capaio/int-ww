@@ -1,4 +1,4 @@
-import {IsInt, IsNotEmpty, Max, Min} from "class-validator";
+import { IsInt, IsNotEmpty, Max, Min } from "class-validator";
 import { SOFT_MAX } from "../../common/constants";
 
 export class DonationRequestDto {

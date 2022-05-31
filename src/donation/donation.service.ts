@@ -31,6 +31,6 @@ export class DonationService {
   }
 
   async update(request: DonationRequestEntity) {
-    await this.requestRepository.update({id: request.id}, request);
+    await this.requestRepository.update({ id: request.id }, request);
   }
 }

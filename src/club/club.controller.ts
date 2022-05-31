@@ -70,12 +70,11 @@ export class ClubController {
       throw new UnauthorizedException("Unlogged or not belonging to club");
     }
 
-    const res = await this.donationService.createRequest(
+    await this.donationService.createRequest(
       user,
       user.clubs[0],
       donationRequestDto.amount
     );
-
   }
 
   @Post("/join/:id")

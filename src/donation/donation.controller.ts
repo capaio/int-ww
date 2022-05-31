@@ -32,9 +32,10 @@ export class DonationController {
       throw new BadRequestException("Donations are closed");
     }
 
-
     if (!user.clubs.some((club) => club.id == donationRequest.club.id)) {
-      throw new UnauthorizedException(`Before donate you must join the club ${donationRequest.club.club_name}`);
+      throw new UnauthorizedException(
+        `Before donate you must join the club ${donationRequest.club.club_name}`
+      );
     }
 
     if (user.wallet.soft_currency < donationDto.amount) {
@@ -47,7 +48,6 @@ export class DonationController {
     await this.donationService.update(donationRequest);
 
     if (donationRequest.isFulfilled()) {
-
       const recipient = await this.userService.findOneWithRequests(
         donationRequest.user.id,
         donationRequest.id
@@ -55,7 +55,10 @@ export class DonationController {
 
       recipient.donationRequests[0].funded = 0;
       recipient.donationRequests[0].fulfilled = 1;
-      await this.userService.updateCurrency(recipient.id, {hard_currency:0, soft_currency: recipient.wallet.soft_currency + donationRequest.funded});
+      await this.userService.updateCurrency(recipient.id, {
+        hard_currency: 0,
+        soft_currency: recipient.wallet.soft_currency + donationRequest.funded,
+      });
       await this.donationService.update(recipient.donationRequests[0]);
     }
   }
