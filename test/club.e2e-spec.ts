@@ -10,10 +10,10 @@ import { DonationModule } from "../src/donation/donation.module";
 import {CREATE_CLUB_FEE, HARD_MAX, JOIN_CLUB_FEE, SOFT_MAX} from "../src/common/constants";
 import { clearDb } from "./helpers";
 
-describe("Api Controller ", () => {
+describe("Club tests ", () => {
   let app: INestApplication;
   let RandomUsername: string;
-  let AntoherRandomUsername: string;
+  let AnotherRandomUsername: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -45,7 +45,7 @@ describe("Api Controller ", () => {
     app.useGlobalPipes(new ValidationPipe());
 
     RandomUsername = "user_" + Date.now();
-    AntoherRandomUsername = "new_user_" + Date.now();
+    AnotherRandomUsername = "new_user_" + Date.now();
     await app.init();
   });
 
@@ -119,7 +119,6 @@ describe("Api Controller ", () => {
       await request(app.getHttpServer())
         .post("/club")
         .send({ uuid: token, name: "a new club" })
-        //.expect(201)
         .expect((response) => {
           clubId = response.body.clubId;
         });
@@ -143,25 +142,25 @@ describe("Api Controller ", () => {
         //create user
         await request(app.getHttpServer())
           .post("/user")
-          .send({username: AntoherRandomUsername, password: "123465"})
+          .send({username: AnotherRandomUsername, password: "123465"})
           .expect(201)
           .expect((response) => {
             userId = response.body.id;
           });
 
         //join club not logged
-        await request(app.getHttpServer())
+        return request(app.getHttpServer())
           .post(`/club/join/${clubId}`)
           .send({uuid: 'not-valid'})
           .expect(401)
       });
 
-      it("Users can join clubs if logged and fee is paid", async () => {
+      it("Users can join clubs and pay fee if logged ", async () => {
 
         //login
         await request(app.getHttpServer())
           .post("/user/login")
-          .send({username: AntoherRandomUsername, password: "123465"})
+          .send({username: AnotherRandomUsername, password: "123465"})
           .expect(201)
           .expect((response) => {
             token = response.body.uuid;
@@ -192,7 +191,7 @@ describe("Api Controller ", () => {
       it("Users can't join twice in club", async () => {
 
         // join club logged
-        await request(app.getHttpServer())
+        return request(app.getHttpServer())
           .post(`/club/join/${clubId}`)
           .send({uuid: token})
           .expect(401)
@@ -201,8 +200,10 @@ describe("Api Controller ", () => {
     });
   });
 
+  it.todo("check for club with > 50 members")
+
   afterAll(async () => {
-    await clearDb();
+    //await clearDb();
     await app.close();
   });
 });

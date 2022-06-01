@@ -7,10 +7,10 @@ import { UserModule } from "../src/user/user.module";
 import { ClubModule } from "../src/club/club.module";
 import { MessageModule } from "../src/message/message.module";
 import { DonationModule } from "../src/donation/donation.module";
-import { HARD_MAX, SOFT_MAX } from "../src/common/constants";
+import {CREATE_CLUB_FEE, HARD_MAX, JOIN_CLUB_FEE, SOFT_MAX} from "../src/common/constants";
 import { clearDb } from "./helpers";
 
-describe("User tests ", () => {
+describe("Messages tests ", () => {
   let app: INestApplication;
   let RandomUsername: string;
   let AnotherRandomUsername: string;
@@ -49,91 +49,89 @@ describe("User tests ", () => {
     await app.init();
   });
 
-  describe("User", () => {
-    it("save user with no data returns error", () => {
-      return request(app.getHttpServer())
-        .post("/user")
-        .send()
-        .expect(400)
-        .expect((response) => {
-          expect(response.body.message.length).toEqual(7);
-        });
-    });
+  describe("Create club and send message in it", () => {
 
-    it("save user correctly", () => {
-      return request(app.getHttpServer())
-        .post("/user")
-        .send({ username: RandomUsername, password: "123465" })
-        .expect(201);
-    });
-
-    it("save user with same username gives error", () => {
-      return request(app.getHttpServer())
-        .post("/user")
-        .send({ username: RandomUsername, password: "123465" })
-        .expect(400)
-        .expect((response) => {
-          expect(response.body.message).toEqual("Username already taken");
-        });
-    });
-  });
-
-  describe("add currency", () => {
+    let clubId;
+    let token;
     let wallet;
     let userId;
 
-    it("adds correct values ", async () => {
+    it("send message", async () => {
+
+      //create user
       await request(app.getHttpServer())
         .post("/user")
-        .send({ username: AnotherRandomUsername, password: "123465" })
+        .send({ username: RandomUsername, password: "123465" })
         .expect(201)
         .expect((response) => {
-          wallet = response.body.wallet;
           userId = response.body.id;
         });
 
+      //add currency
       await request(app.getHttpServer())
         .patch(`/user/${userId}/addCurrency`)
         .send({
-          hard_currency: 5,
-          soft_currency: 5,
+          hard_currency: 0,
+          soft_currency: 500,
         })
         .expect(200)
+
+      //login
+      await request(app.getHttpServer())
+        .post("/user/login")
+        .send({ username: RandomUsername, password: "123465" })
+        .expect(201)
         .expect((response) => {
-          expect(response.body.hard_currency).toEqual(wallet.hard_currency + 5);
-          expect(response.body.soft_currency).toEqual(wallet.soft_currency + 5);
+          token = response.body.uuid;
+        });
+
+      // create club
+      await request(app.getHttpServer())
+        .post("/club")
+        .send({ uuid: token, name: "a new club" })
+        .expect(201)
+        .expect((response) => {
+          clubId = response.body.clubId;
+        });
+
+      //send message
+      return request(app.getHttpServer())
+        .post("/messages")
+        .send({
+          "uuid":token,
+          "clubId": clubId,
+          "message": "This is a message. 42"
+        })
+        .expect(201)
+
+
+    });
+
+    it("send message unlogged", async () => {
+      //send message
+      return request(app.getHttpServer())
+        .post("/messages")
+        .send({
+          "uuid":'fake',
+          "clubId": clubId,
+          "message": "This is a message. 42"
+        })
+        .expect(401)
+    });
+
+    it("get messages", async () => {
+      //send message
+      return request(app.getHttpServer())
+        .get(`/club/${clubId}/messages`)
+        .expect(200)
+        .expect((response) => {
+          expect(response.body.messages.length).toEqual(1);
+          expect(response.body.messages[0].message).toEqual("This is a message. 42");
         });
     });
 
-    it("adds max 100 and 1000 ", async () => {
-      await request(app.getHttpServer())
-        .patch(`/user/${userId}/addCurrency`)
-        .send({
-          hard_currency: 99,
-          soft_currency: 999,
-        })
-        .expect(200)
-        .expect((response) => {
-          expect(response.body.hard_currency).toEqual(HARD_MAX);
-          expect(response.body.soft_currency).toEqual(SOFT_MAX);
-        });
-    });
 
-    it("return error if values are not integer ", async () => {
-      await request(app.getHttpServer())
-        .patch(`/user/${userId}/addCurrency`)
-        .send({
-          hard_currency: 2.5,
-          soft_currency: 50.2,
-        })
-        .expect(400)
-        .expect((response) => {
-          expect(response.body.message.length).toEqual(2);
-        });
-    });
   });
-
-  it.todo('test for clubs with members > 50')
 
   afterAll(async () => {
     //await clearDb();
