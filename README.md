@@ -284,7 +284,9 @@ Expected Body:
 
 Response ok:
 ```
-201 Created
+{
+    "id": integer
+}
 ```
 <hr>
 
