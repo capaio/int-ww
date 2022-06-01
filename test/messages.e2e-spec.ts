@@ -7,13 +7,10 @@ import { UserModule } from "../src/user/user.module";
 import { ClubModule } from "../src/club/club.module";
 import { MessageModule } from "../src/message/message.module";
 import { DonationModule } from "../src/donation/donation.module";
-import {CREATE_CLUB_FEE, HARD_MAX, JOIN_CLUB_FEE, SOFT_MAX} from "../src/common/constants";
-import { clearDb } from "./helpers";
 
 describe("Messages tests ", () => {
   let app: INestApplication;
   let RandomUsername: string;
-  let AnotherRandomUsername: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -45,19 +42,15 @@ describe("Messages tests ", () => {
     app.useGlobalPipes(new ValidationPipe());
 
     RandomUsername = "user_" + Date.now();
-    AnotherRandomUsername = "new_user_" + Date.now();
     await app.init();
   });
 
   describe("Create club and send message in it", () => {
-
     let clubId;
     let token;
-    let wallet;
     let userId;
 
     it("send message", async () => {
-
       //create user
       await request(app.getHttpServer())
         .post("/user")
@@ -74,7 +67,7 @@ describe("Messages tests ", () => {
           hard_currency: 0,
           soft_currency: 500,
         })
-        .expect(200)
+        .expect(200);
 
       //login
       await request(app.getHttpServer())
@@ -98,13 +91,11 @@ describe("Messages tests ", () => {
       return request(app.getHttpServer())
         .post("/messages")
         .send({
-          "uuid":token,
-          "clubId": clubId,
-          "message": "This is a message. 42"
+          uuid: token,
+          clubId: clubId,
+          message: "This is a message. 42",
         })
-        .expect(201)
-
-
+        .expect(201);
     });
 
     it("send message unlogged", async () => {
@@ -112,11 +103,11 @@ describe("Messages tests ", () => {
       return request(app.getHttpServer())
         .post("/messages")
         .send({
-          "uuid":'fake',
-          "clubId": clubId,
-          "message": "This is a message. 42"
+          uuid: "fake",
+          clubId: clubId,
+          message: "This is a message. 42",
         })
-        .expect(401)
+        .expect(401);
     });
 
     it("get messages", async () => {
@@ -126,15 +117,14 @@ describe("Messages tests ", () => {
         .expect(200)
         .expect((response) => {
           expect(response.body.messages.length).toEqual(1);
-          expect(response.body.messages[0].message).toEqual("This is a message. 42");
+          expect(response.body.messages[0].message).toEqual(
+            "This is a message. 42"
+          );
         });
     });
-
-
   });
 
   afterAll(async () => {
-    //await clearDb();
     await app.close();
   });
 });

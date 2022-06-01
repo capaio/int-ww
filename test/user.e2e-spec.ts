@@ -8,7 +8,6 @@ import { ClubModule } from "../src/club/club.module";
 import { MessageModule } from "../src/message/message.module";
 import { DonationModule } from "../src/donation/donation.module";
 import { HARD_MAX, SOFT_MAX } from "../src/common/constants";
-import { clearDb } from "./helpers";
 
 describe("User tests ", () => {
   let app: INestApplication;
@@ -133,10 +132,9 @@ describe("User tests ", () => {
     });
   });
 
-  it.todo('test for clubs with members > 50')
+  it.todo("test for clubs with members > 50");
 
   afterAll(async () => {
-    //await clearDb();
     await app.close();
   });
 });

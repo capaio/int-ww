@@ -7,8 +7,7 @@ import { UserModule } from "../src/user/user.module";
 import { ClubModule } from "../src/club/club.module";
 import { MessageModule } from "../src/message/message.module";
 import { DonationModule } from "../src/donation/donation.module";
-import {CREATE_CLUB_FEE, HARD_MAX, JOIN_CLUB_FEE, SOFT_MAX} from "../src/common/constants";
-import { clearDb } from "./helpers";
+import { CREATE_CLUB_FEE, JOIN_CLUB_FEE } from "../src/common/constants";
 
 describe("Club tests ", () => {
   let app: INestApplication;
@@ -50,7 +49,6 @@ describe("Club tests ", () => {
   });
 
   describe("Club creation", () => {
-
     let clubId;
 
     it("Non logged users can't creat clubs", () => {
@@ -59,7 +57,9 @@ describe("Club tests ", () => {
         .send({ uuid: "123-456", name: "name of the club" })
         .expect(401)
         .expect((response) => {
-          expect(response.body.message).toEqual('You must be logged in to create a new club');
+          expect(response.body.message).toEqual(
+            "You must be logged in to create a new club"
+          );
         });
     });
 
@@ -74,7 +74,6 @@ describe("Club tests ", () => {
     });
 
     it("Logged users can create clubs", async () => {
-
       let token;
       let wallet;
       let userId;
@@ -95,8 +94,7 @@ describe("Club tests ", () => {
           hard_currency: 0,
           soft_currency: 500,
         })
-        .expect(200)
-
+        .expect(200);
 
       //login
       await request(app.getHttpServer())
@@ -127,22 +125,22 @@ describe("Club tests ", () => {
         .get(`/user/${userId}`)
         .expect(200)
         .expect((response) => {
-          expect(response.body.wallet.soft_currency).toEqual(wallet.soft_currency-CREATE_CLUB_FEE)
+          expect(response.body.wallet.soft_currency).toEqual(
+            wallet.soft_currency - CREATE_CLUB_FEE
+          );
         });
     });
 
     describe("Users joining clubs", () => {
-
       let token;
       let wallet;
       let userId;
 
       it("Users can't join clubs not logged", async () => {
-
         //create user
         await request(app.getHttpServer())
           .post("/user")
-          .send({username: AnotherRandomUsername, password: "123465"})
+          .send({ username: AnotherRandomUsername, password: "123465" })
           .expect(201)
           .expect((response) => {
             userId = response.body.id;
@@ -151,16 +149,15 @@ describe("Club tests ", () => {
         //join club not logged
         return request(app.getHttpServer())
           .post(`/club/join/${clubId}`)
-          .send({uuid: 'not-valid'})
-          .expect(401)
+          .send({ uuid: "not-valid" })
+          .expect(401);
       });
 
       it("Users can join clubs and pay fee if logged ", async () => {
-
         //login
         await request(app.getHttpServer())
           .post("/user/login")
-          .send({username: AnotherRandomUsername, password: "123465"})
+          .send({ username: AnotherRandomUsername, password: "123465" })
           .expect(201)
           .expect((response) => {
             token = response.body.uuid;
@@ -177,33 +174,32 @@ describe("Club tests ", () => {
         // join club logged
         await request(app.getHttpServer())
           .post(`/club/join/${clubId}`)
-          .send({uuid: token})
-          .expect(201)
+          .send({ uuid: token })
+          .expect(201);
 
         return request(app.getHttpServer())
           .get(`/user/${userId}`)
           .expect(200)
           .expect((response) => {
-            expect(response.body.wallet.soft_currency).toEqual(wallet.soft_currency - JOIN_CLUB_FEE)
+            expect(response.body.wallet.soft_currency).toEqual(
+              wallet.soft_currency - JOIN_CLUB_FEE
+            );
           });
       });
 
       it("Users can't join twice in club", async () => {
-
         // join club logged
         return request(app.getHttpServer())
           .post(`/club/join/${clubId}`)
-          .send({uuid: token})
-          .expect(401)
-
+          .send({ uuid: token })
+          .expect(401);
       });
     });
   });
 
-  it.todo("check for club with > 50 members")
+  it.todo("check for club with > 50 members");
 
   afterAll(async () => {
-    //await clearDb();
     await app.close();
   });
 });
